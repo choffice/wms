@@ -1,0 +1,27 @@
+### 최근 실제 shiftDate
+GET http://localhost:8080/api/admin/reports/shift-dates?limit=7
+
+### 특정 근무조 보고서
+GET http://localhost:8080/api/admin/reports/shift/2026-08-27
+
+### shiftDate가 연결된 인계메모
+POST http://localhost:8080/api/admin/handover-notes
+Content-Type: application/json
+
+{
+  "shiftDate": "2026-08-27",
+  "content": "A01 재고조사 다음 교대에서 재확인."
+}
+
+### 공통 인계메모
+POST http://localhost:8080/api/admin/handover-notes
+Content-Type: application/json
+
+{
+  "shiftDate": null,
+  "content": "PDA 33 충전상태 다음 관리자 확인."
+}
+
+### Demo Scenario는 application.yml 환경변수로 활성화
+# DEMO_SCENARIO_ENABLED=true
+# DEMO_MATE_PASSWORD=mate1234

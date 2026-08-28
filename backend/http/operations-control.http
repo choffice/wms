@@ -1,0 +1,22 @@
+### 운영관제
+GET http://localhost:8080/api/admin/operations
+
+### 업무배정 취소
+POST http://localhost:8080/api/admin/work-assignments/1/cancel
+Content-Type: application/json
+
+{
+  "reason": "현장 운영 변경"
+}
+
+### 배정 Lifecycle History
+GET http://localhost:8080/api/admin/work-assignments/1/assignment-history
+
+### PDA 관리자 회수
+POST http://localhost:8080/api/admin/operations/pda-usages/1/release
+
+### Admin 오늘 연장 해제
+DELETE http://localhost:8080/api/admin/mates/1/extension
+
+### MATE 오늘 근무정보
+GET http://localhost:8080/api/mate/shift/today

@@ -1,0 +1,5 @@
+### Area + WorkType 현재 진행/예상
+GET http://localhost:8080/api/admin/work-estimates?areaId=1&workTypeId=1
+
+### 선택 시작점까지 포함한 배정 참고 예상
+GET http://localhost:8080/api/admin/work-estimates?areaId=1&workTypeId=1&startLocationId=5

@@ -1,0 +1,93 @@
+### 0. Health
+GET http://localhost:8080/api/health
+
+### 1. Admin Login
+POST http://localhost:8080/api/auth/admin/login
+Content-Type: application/json
+
+{
+  "employeeNo": "AD0001",
+  "password": "admin1234"
+}
+
+### 2. Create MATE
+POST http://localhost:8080/api/admin/mates
+Content-Type: application/json
+
+{
+  "name": "김민수",
+  "nickname": "민수",
+  "password": "1234",
+  "joinedAt": "2026-08-26"
+}
+
+### 3. Create PDA
+POST http://localhost:8080/api/admin/pdas
+Content-Type: application/json
+
+{
+  "deviceNumber": 12
+}
+
+### 4. Create Area A01 ~ A03
+POST http://localhost:8080/api/admin/locations/areas/range
+Content-Type: application/json
+
+{
+  "alphabet": "A",
+  "startNumber": 1,
+  "endNumber": 3,
+  "width": 2,
+  "floor": 1,
+  "foodType": "NON_FOOD",
+  "nonFoodCategories": ["GENERAL"]
+}
+
+### 5. Create Work Type
+POST http://localhost:8080/api/admin/work-types
+Content-Type: application/json
+
+{
+  "name": "재고실사",
+  "description": "로케이션별 실재고 확인"
+}
+
+### 6. Admin Dashboard
+GET http://localhost:8080/api/admin/dashboard
+
+### 7. Logout Admin
+POST http://localhost:8080/api/auth/logout
+
+### 8. MATE Login
+# 실제 발급된 MT 사원번호로 수정
+POST http://localhost:8080/api/auth/mate/login
+Content-Type: application/json
+
+{
+  "deviceNumber": 12,
+  "employeeNo": "MT0001",
+  "password": "1234"
+}
+
+### 9. MATE Current PDA
+GET http://localhost:8080/api/mate/pda-sessions/current
+
+### 10. My Assignments
+GET http://localhost:8080/api/mate/work-assignments
+
+### 11. Heartbeat example
+# POST http://localhost:8080/api/mate/work-sessions/{sessionId}/heartbeat
+
+### 12. Extend Shift
+POST http://localhost:8080/api/mate/extension
+
+### 13. End Shift
+POST http://localhost:8080/api/mate/shift/end
+
+### 14. Return PDA
+POST http://localhost:8080/api/mate/pda-sessions/return
+Content-Type: application/json
+
+{
+  "reason": "RETURNED"
+}

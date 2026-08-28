@@ -1,0 +1,19 @@
+### 운영 후속조치 큐
+GET http://localhost:8080/api/admin/action-queue
+
+### 교대 인계요약
+GET http://localhost:8080/api/admin/handover-overview
+
+### 최근 인계메모
+GET http://localhost:8080/api/admin/handover-notes
+
+### 인계메모 추가
+POST http://localhost:8080/api/admin/handover-notes
+Content-Type: application/json
+
+{
+  "content": "A01 재고조사 마지막 위치 A01-08. 다음 교대에서 이어서 확인."
+}
+
+### 인계메모 감사로그
+GET http://localhost:8080/api/admin/activity-logs?type=HANDOVER_NOTE_CREATE&page=0&size=50

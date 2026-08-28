@@ -1,0 +1,24 @@
+### 미처리 업무 / 인수인계 현황
+GET http://localhost:8080/api/admin/handover
+
+### 빠른 인수인계는 기존 Trade API 사용
+POST http://localhost:8080/api/admin/work-assignments/17/trade
+Content-Type: application/json
+
+{
+  "toMateId": 4,
+  "reason": "인수인계 · 근무종료 이월"
+}
+
+### 관리자 마지막 수행위치 정정
+POST http://localhost:8080/api/admin/work-assignments/17/progress-correction
+Content-Type: application/json
+
+{
+  "expectedCurrentLocationId": 88,
+  "correctedLocationId": 87,
+  "reason": "현장 확인 후 오입력 정정"
+}
+
+### 정정 감사로그
+GET http://localhost:8080/api/admin/activity-logs?type=WORK_PROGRESS_CORRECTION&page=0&size=50

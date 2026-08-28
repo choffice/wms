@@ -1,0 +1,54 @@
+### 교대 마감 Preview
+GET http://localhost:8080/api/admin/shift-close/preview
+
+### 특이사항 일괄 확인
+POST http://localhost:8080/api/admin/issues/bulk-confirm
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "issueId": 11,
+      "expectedStatus": "UNCONFIRMED"
+    },
+    {
+      "issueId": 12,
+      "expectedStatus": "UNCONFIRMED"
+    }
+  ]
+}
+
+### 특이사항 일괄 해결
+POST http://localhost:8080/api/admin/issues/bulk-resolve
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "issueId": 21,
+      "expectedStatus": "CONFIRMED"
+    }
+  ]
+}
+
+### 특이사항 일괄 담당지정
+POST http://localhost:8080/api/admin/issues/bulk-responsible
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "issueId": 11,
+      "expectedResponsibleMateId": null
+    },
+    {
+      "issueId": 12,
+      "expectedResponsibleMateId": 3
+    }
+  ],
+  "toMateId": 4,
+  "reason": "교대 인수인계"
+}
+
+### 일괄처리 Summary 감사로그
+GET http://localhost:8080/api/admin/activity-logs?type=ISSUE_BULK_ACTION&page=0&size=50

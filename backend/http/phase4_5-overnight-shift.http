@@ -1,0 +1,33 @@
+### 야간조 기본 스케줄 예시
+PUT http://localhost:8080/api/admin/mates/1/schedules
+Content-Type: application/json
+
+[
+  {
+    "dayOfWeek": "MONDAY",
+    "scheduleType": "WEEKDAY",
+    "shiftType": "CLOSING",
+    "startTime": "22:00:00",
+    "endTime": "06:00:00"
+  }
+]
+
+### 야간조 기간 Override 예시
+POST http://localhost:8080/api/admin/mates/1/schedule-overrides
+Content-Type: application/json
+
+{
+  "startDate": "2026-08-27",
+  "endDate": "2026-08-29",
+  "startTime": "22:00:00",
+  "endTime": "06:00:00"
+}
+
+### MATE 현재 근무기준일 / 예정 종료
+GET http://localhost:8080/api/mate/shift/today
+
+### shiftDate 근무조 보고서
+GET http://localhost:8080/api/admin/reports/shift/2026-08-27
+
+### 달력일 보고서는 기존 의미 유지
+GET http://localhost:8080/api/admin/reports/daily/2026-08-28

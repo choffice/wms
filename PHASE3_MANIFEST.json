@@ -1,0 +1,201 @@
+{
+  "phase": "4.7",
+  "baseline": "warehouse-fullstack-admin-web-phase2-java17",
+  "java": 17,
+  "frontend": "React + TypeScript + Vite",
+  "mobile": "Responsive Web + PWA",
+  "admin_web": true,
+  "mate_mobile": true,
+  "pwa": true,
+  "key_routes": [
+    "/login",
+    "/mate/login",
+    "/mate",
+    "/mate/work",
+    "/mate/issues",
+    "/mate/notices",
+    "/mate/more"
+  ],
+  "added": [
+    "CSRF protection for session/cookie auth",
+    "public CSRF bootstrap endpoint",
+    "automatic frontend CSRF header injection",
+    "HttpOnly SameSite session cookie hardening",
+    "env-controlled Secure session cookie",
+    "admin system readiness endpoint/page",
+    "demo readiness rules based on master data + critical integrity",
+    "demo runbook",
+    "release checklist",
+    "session id rotation on manual login",
+    "submission-oriented technical specification"
+  ],
+  "vite_build_environment_status": "npm registry unreachable; dependency install unavailable",
+  "ui_style_lock": "ERP/WMS industrial, square, dense, low-decoration",
+  "erp_ui_changes": [
+    "dashboard notices converted from sticky notes to dense rows",
+    "location progress converted from cards to table",
+    "global radius/shadow reduction",
+    "denser tables/forms/tabs",
+    "MATE PWA hardened toward industrial PDA visual language"
+  ],
+  "review_checkpoint": "Area progress percentage semantics because assignments have no endLocation.",
+  "review_checkpoint_resolved": "Progress is a lightweight full-area position indicator; last location remains the operational source of truth.",
+  "estimate_policy": {
+    "auto_priority": false,
+    "fallback_to_other_area_or_work_type": false,
+    "display_precision": "approximately 10 minutes",
+    "historical_key": "Area + WorkType"
+  },
+  "policy_note": "No automatic business priority is calculated; operations warnings are objective consistency/device/session conditions only.",
+  "session_reliability_defaults": {
+    "heartbeat_uncertain_minutes": 3,
+    "network_timeout_minutes": 10,
+    "network_timeout_status": "AWAY",
+    "network_timeout_whereabouts": "통신 확인 필요"
+  },
+  "policy_review_required": false,
+  "report_semantics": {
+    "daily_report": "calendar-day clipped",
+    "range_report": "calendar-day based",
+    "shift_report": "whole session attributed to shiftDate",
+    "previous_shift_lookup_days": 14
+  },
+  "audit_policy": {
+    "physical_delete_in_ui": false,
+    "dashboard_clear": "display only",
+    "database": "append-only operational history",
+    "max_page_size": 100
+  },
+  "validation": {
+    "typescript_transpile_syntax_files": 33,
+    "typescript_transpile_syntax_errors": 0,
+    "relative_import_errors": 0,
+    "java_brace_structure_errors": 0,
+    "duplicate_public_java_types": 0,
+    "missing_local_java_imports_excluding_querydsl_generated": 0,
+    "security_and_data_safety_presence": {
+      "csrf_not_disabled": true,
+      "csrf_cookie_repository": true,
+      "csrf_bootstrap_endpoint": true,
+      "frontend_unsafe_csrf": true,
+      "session_id_rotation": true,
+      "activity_log_delete_endpoint_absent": true,
+      "activity_log_client_delete_absent": true,
+      "readiness_endpoint": true,
+      "demo_seed_default_off": true
+    },
+    "node_modules_present": false,
+    "gradle_wrapper_present": false,
+    "actual_vite_build": false,
+    "actual_gradle_build": false
+  },
+  "audit_master_reference_types": [
+    "MATE",
+    "MATE_STATUS",
+    "MATE_SCHEDULE",
+    "PDA_DEVICE",
+    "LOCATION",
+    "WORK_TYPE",
+    "ISSUE_TYPE"
+  ],
+  "integrity_policy": {
+    "automatic_destructive_recovery": false,
+    "domain_history_deleted": false,
+    "safe_repairs_require_clear_source_of_truth": true,
+    "ambiguous_conflicts": "manual review only"
+  },
+  "handover_policy": {
+    "auto_business_priority": false,
+    "admin_starts_work_session": false,
+    "actual_time_starts_by": "MATE start/resume action",
+    "trade_preserves_assignment_history": true
+  },
+  "correction_policy": {
+    "delete_old_progress": false,
+    "active_session_correction": false,
+    "stale_overwrite": false,
+    "completed_assignment_correction": true,
+    "canceled_assignment_correction": false,
+    "reason_required": false
+  },
+  "bulk_handover_policy": {
+    "max_items": 50,
+    "partial_success": false,
+    "transaction": "all-or-nothing",
+    "admin_starts_work_session": false,
+    "expected_current_mate_required_for_bulk": true
+  },
+  "correction_undo_policy": {
+    "delete_existing_progress": false,
+    "latest_correction_only": true,
+    "previous_location_required": true,
+    "open_session_allowed": false,
+    "optimistic_latest_progress_guard": true
+  },
+  "shift_close_policy": {
+    "global_close_action": false,
+    "blockers": [
+      "OPEN_WORK_SESSION",
+      "INTEGRITY_CRITICAL"
+    ],
+    "warnings_do_not_block": true,
+    "actual_shift_end": "existing per-MATE workflow"
+  },
+  "issue_bulk_policy": {
+    "max_items": 50,
+    "partial_success": false,
+    "transaction": "all-or-nothing",
+    "confirm_requires": "UNCONFIRMED",
+    "resolve_requires": "CONFIRMED",
+    "stale_status_overwrite": false,
+    "stale_responsible_overwrite": false
+  },
+  "action_queue_policy": {
+    "automatic_business_priority": false,
+    "sort_basis": "operational handling class only",
+    "max_rendered_items": 100
+  },
+  "handover_overview_policy": {
+    "calendar_day_assumption": false,
+    "shift_boundary_assumption": false,
+    "recent_admin_activity_limit": 20,
+    "recent_handover_note_limit": 20,
+    "handover_note_edit_delete": false
+  },
+  "overnight_shift_policy": {
+    "end_after_start": "same-day end",
+    "end_before_start": "next-day end",
+    "equal_start_end": "invalid",
+    "shift_date": "shift start calendar date",
+    "period_override_dates": "shiftDate range",
+    "demo_default": "day shift remains unchanged"
+  },
+  "demo_scenario_policy": {
+    "enabled_default": false,
+    "runs_only_when_mate_table_empty": true,
+    "historical_timestamp_fabrication": false,
+    "default_shift": "08:00-18:00 day shift"
+  },
+  "handover_note_policy": {
+    "shift_date_optional": true,
+    "automatic_shift_guess": false,
+    "common_note": "shiftDate=null",
+    "edit_delete": false
+  },
+  "security_policy": {
+    "authentication": "Spring Security Session/Cookie",
+    "csrf": true,
+    "csrf_bootstrap": "/api/auth/csrf",
+    "session_cookie_http_only": true,
+    "session_cookie_same_site": "lax",
+    "session_cookie_secure_env": "SESSION_COOKIE_SECURE",
+    "session_id_rotation_on_login": true
+  },
+  "readiness_policy": {
+    "requires_master_data": true,
+    "integrity_critical_must_be_zero": true,
+    "open_session_blocks_ready": false,
+    "handover_candidate_blocks_ready": false,
+    "unresolved_issue_blocks_ready": false
+  }
+}

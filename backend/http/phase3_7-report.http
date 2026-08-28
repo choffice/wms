@@ -1,0 +1,8 @@
+### 일일 보고서
+GET http://localhost:8080/api/admin/reports/daily/2026-08-27
+
+### 업무시간 통계
+GET http://localhost:8080/api/admin/reports/work-time?from=2026-08-27&to=2026-08-27&includeUncertain=false
+
+### 기간 통계
+GET http://localhost:8080/api/admin/reports/range?from=2026-08-21&to=2026-08-27

@@ -1,0 +1,25 @@
+{
+  "name": "Warehouse MATE Work",
+  "short_name": "MATE Work",
+  "description": "물류센터 MATE 업무수행 및 진행기록 PWA",
+  "start_url": "/mate/login",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#171b1f",
+  "theme_color": "#171b1f",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+### 특정 PDA Master 변경 이력
+GET http://localhost:8080/api/admin/activity-logs?referenceType=PDA_DEVICE&referenceId=1&page=0&size=50
+
+### 특정 MATE 기본정보 변경 이력
+GET http://localhost:8080/api/admin/activity-logs?referenceType=MATE&referenceId=1&page=0&size=50
+
+### 특정 MATE 스케줄 변경 이력
+GET http://localhost:8080/api/admin/activity-logs?referenceType=MATE_SCHEDULE&referenceId=1&page=0&size=50
+
+### 특정 Location 변경 이력
+GET http://localhost:8080/api/admin/activity-logs?referenceType=LOCATION&referenceId=1&page=0&size=50
+
+### 업무 종류 변경 이력
+GET http://localhost:8080/api/admin/activity-logs?referenceType=WORK_TYPE&referenceId=1&page=0&size=50

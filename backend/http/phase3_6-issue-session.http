@@ -1,0 +1,29 @@
+### 특이사항 처리이력
+GET http://localhost:8080/api/admin/issues/1/history
+
+### 특이사항 담당 지정
+PATCH http://localhost:8080/api/admin/issues/1/responsible
+Content-Type: application/json
+
+{
+  "mateId": 2,
+  "reason": "현장 확인 담당 변경"
+}
+
+### 특이사항 담당 해제
+PATCH http://localhost:8080/api/admin/issues/1/responsible
+Content-Type: application/json
+
+{
+  "mateId": null,
+  "reason": "재배정 대기"
+}
+
+### 미확인 → 확인
+POST http://localhost:8080/api/admin/issues/1/confirm
+
+### 확인 → 해결
+POST http://localhost:8080/api/admin/issues/1/resolve
+
+### 운영관제
+GET http://localhost:8080/api/admin/operations

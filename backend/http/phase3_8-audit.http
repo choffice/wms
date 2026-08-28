@@ -1,0 +1,17 @@
+### 최근 7일 감사로그
+GET http://localhost:8080/api/admin/activity-logs?from=2026-08-21&to=2026-08-27&page=0&size=50
+
+### 업무배정 관련 관리자 행위
+GET http://localhost:8080/api/admin/activity-logs?type=WORK_ASSIGN&referenceType=WORK_ASSIGNMENT&page=0&size=50
+
+### 특정 관리자
+GET http://localhost:8080/api/admin/activity-logs?actor=AD0001&page=0&size=50
+
+### 키워드
+GET http://localhost:8080/api/admin/activity-logs?keyword=A01&page=0&size=50
+
+### ActivityType 목록
+GET http://localhost:8080/api/admin/activity-logs/types
+
+### ReferenceType 목록
+GET http://localhost:8080/api/admin/activity-logs/reference-types

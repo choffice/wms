@@ -1,0 +1,46 @@
+### 일괄 인수인계
+POST http://localhost:8080/api/admin/handover/bulk-transfer
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "assignmentId": 17,
+      "expectedCurrentMateId": 3,
+      "toMateId": 4,
+      "reason": "교대 인수인계"
+    },
+    {
+      "assignmentId": 18,
+      "expectedCurrentMateId": 3,
+      "toMateId": 5,
+      "reason": "교대 인수인계"
+    }
+  ]
+}
+
+### 일반 담당변경도 stale guard 사용 가능
+POST http://localhost:8080/api/admin/work-assignments/17/trade
+Content-Type: application/json
+
+{
+  "toMateId": 4,
+  "expectedCurrentMateId": 3,
+  "reason": "관리자 담당변경"
+}
+
+### 최근 정정 되돌리기
+POST http://localhost:8080/api/admin/work-assignments/17/progress-correction/undo-latest
+Content-Type: application/json
+
+{
+  "expectedLatestProgressId": 31,
+  "expectedCurrentLocationId": 87,
+  "reason": "최근 정정 되돌리기"
+}
+
+### 인수인계 감사로그
+GET http://localhost:8080/api/admin/activity-logs?type=WORK_HANDOVER&page=0&size=50
+
+### 일괄 인수인계 Summary 감사로그
+GET http://localhost:8080/api/admin/activity-logs?type=WORK_BULK_HANDOVER&page=0&size=50

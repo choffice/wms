@@ -1,0 +1,17 @@
+### 정합성 전체 검사
+GET http://localhost:8080/api/admin/integrity
+
+### 개별 안전복구
+POST http://localhost:8080/api/admin/integrity/repair
+Content-Type: application/json
+
+{
+  "action": "RESET_ORPHAN_PDA_STATUS",
+  "entityId": 1
+}
+
+### 현재 가능한 안전복구 일괄 실행
+POST http://localhost:8080/api/admin/integrity/repair-safe
+
+### 정합성 복구 감사로그
+GET http://localhost:8080/api/admin/activity-logs?type=INTEGRITY_REPAIR&page=0&size=50

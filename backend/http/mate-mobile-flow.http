@@ -1,0 +1,44 @@
+### 로그인 가능한 PDA
+GET http://localhost:8080/api/auth/mate/pdas
+
+### MATE 로그인
+POST http://localhost:8080/api/auth/mate/login
+Content-Type: application/json
+
+{
+  "deviceNumber": 12,
+  "employeeNo": "MT0001",
+  "password": "1234"
+}
+
+### 로그인 정보
+GET http://localhost:8080/api/auth/me
+
+### 배정 업무
+GET http://localhost:8080/api/mate/work-assignments
+
+### 현재 작업 세션
+GET http://localhost:8080/api/mate/work-sessions/current
+
+### MATE용 특이사항 유형
+GET http://localhost:8080/api/mate/lookups/issue-types
+
+### MATE용 Location
+GET http://localhost:8080/api/mate/lookups/locations
+
+### 공지
+GET http://localhost:8080/api/mate/notices
+
+### 연장
+POST http://localhost:8080/api/mate/extension
+
+### 근무 종료
+POST http://localhost:8080/api/mate/shift/end
+
+### PDA 반납
+POST http://localhost:8080/api/mate/pda-sessions/return
+Content-Type: application/json
+
+{
+  "reason": "RETURNED"
+}
