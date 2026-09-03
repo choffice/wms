@@ -23,7 +23,7 @@ CREATE DATABASE warehouse;
 ```text
 jdbc:postgresql://localhost:5432/warehouse
 username: postgres
-password: postgres
+password: 1234
 ```
 
 ### 2. Backend

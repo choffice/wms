@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AlertTriangle, ClipboardCheck, RefreshCw, UsersRound } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { api } from '../api/client'
 import type { AdminDashboard } from '../api/types'
 import { Panel } from '../components/Panel'
@@ -7,17 +8,6 @@ import { StatusBadge } from '../components/StatusBadge'
 
 function compact(text: string, max = 74) {
   return text.length > max ? `${text.slice(0, max)}…` : text
-}
-
-function eta(value: number | null) {
-  if (value == null) return '이력 부족'
-  const rawMinutes = Math.max(0, Math.round(value / 60))
-  const rounded = rawMinutes < 10 ? rawMinutes : Math.round(rawMinutes / 10) * 10
-  const hours = Math.floor(rounded / 60)
-  const minutes = rounded % 60
-  if (hours === 0) return `약 ${minutes}분`
-  if (minutes === 0) return `약 ${hours}시간`
-  return `약 ${hours}시간 ${minutes}분`
 }
 
 function time(value: string | null) {
@@ -70,9 +60,7 @@ export function DashboardPage() {
   )
 
   const visibleLogs = useMemo(
-    () => data?.latestLogs.filter(
-      (log) => !hiddenLogIds.includes(log.id)
-    ) ?? [],
+    () => data?.latestLogs.filter((log) => !hiddenLogIds.includes(log.id)) ?? [],
     [data, hiddenLogIds]
   )
 
@@ -94,10 +82,23 @@ export function DashboardPage() {
 
   return (
     <div className="dashboard-grid">
+      <div className="page-title-row full-span">
+        <div>
+          <span className="eyebrow">TODAY</span>
+          <h2>오늘 현장 현황</h2>
+          <p>근무자, 배정업무, 진행위치와 특이사항만 빠르게 확인합니다.</p>
+        </div>
+        <div className="erp-cell-actions">
+          <Link className="primary-button compact" to="/assignments">업무배정</Link>
+          <Link className="secondary-button compact" to="/issues">특이사항 전체보기</Link>
+          <Link className="secondary-button compact" to="/settings?tab=mate">근무스케줄</Link>
+        </div>
+      </div>
+
       <div className="metric-row full-span">
         <div className="metric-card">
           <UsersRound size={19} />
-          <div><strong>{data.mates.length}</strong><span>활성 MATE</span></div>
+          <div><strong>{data.mates.length}</strong><span>MATE</span></div>
         </div>
         <div className="metric-card">
           <ClipboardCheck size={19} />
@@ -109,14 +110,18 @@ export function DashboardPage() {
         </div>
         <button className="refresh-card" onClick={() => void load()}>
           <RefreshCw size={18} />
-          현황 새로고침
+          새로고침
         </button>
       </div>
 
-      <Panel title="공지사항" className="notice-panel">
+      <Panel
+        title="공지사항"
+        className="notice-panel"
+        action={<Link className="erp-row-button" to="/notices">전체 편집</Link>}
+      >
         <div className="erp-notice-list">
           {data.notices.length === 0 && <div className="empty">표시 중인 공지사항이 없습니다.</div>}
-          {data.notices.slice(0, 8).map((notice) => (
+          {data.notices.slice(0, 6).map((notice) => (
             <article className={`erp-notice-row ${notice.important ? 'important' : ''}`} key={notice.id}>
               <span className="erp-notice-flag">{notice.important ? '중요' : '일반'}</span>
               <p>{notice.content}</p>
@@ -126,10 +131,14 @@ export function DashboardPage() {
         </div>
       </Panel>
 
-      <Panel title="특이사항" className="issue-panel">
+      <Panel
+        title="특이사항"
+        className="issue-panel"
+        action={<Link className="erp-row-button" to="/issues">전체보기</Link>}
+      >
         <div className="issue-list">
           {data.issues.length === 0 && <div className="empty">미확인 특이사항이 없습니다.</div>}
-          {data.issues.slice(0, 8).map((issue) => (
+          {data.issues.slice(0, 6).map((issue) => (
             <article className="issue-row" key={issue.id}>
               <div>
                 <div className="row-kicker">
@@ -148,7 +157,11 @@ export function DashboardPage() {
         </div>
       </Panel>
 
-      <Panel title="MATE 현황판" className="mate-panel">
+      <Panel
+        title="MATE 현황판"
+        className="mate-panel"
+        action={<Link className="erp-row-button" to="/assignments">업무배정</Link>}
+      >
         <div className="table-wrap">
           <table>
             <thead>
@@ -157,7 +170,8 @@ export function DashboardPage() {
                 <th>PDA</th>
                 <th>상태</th>
                 <th>배정업무</th>
-                <th>구역 / 진행</th>
+                <th>배정구역</th>
+                <th>마지막 진행위치</th>
               </tr>
             </thead>
             <tbody>
@@ -167,12 +181,8 @@ export function DashboardPage() {
                   <td>{mate.pdaNumber ?? '-'}</td>
                   <td><StatusBadge status={mate.status} /></td>
                   <td>{mate.workType ?? '-'}</td>
-                  <td>
-                    <span className="location-inline">{mate.area ?? '-'}</span>
-                    {mate.lastCompletedLocation && (
-                      <small> · {mate.lastCompletedLocation}</small>
-                    )}
-                  </td>
+                  <td>{mate.area ?? '-'}</td>
+                  <td>{mate.lastCompletedLocation ?? '-'}</td>
                 </tr>
               ))}
             </tbody>
@@ -180,42 +190,34 @@ export function DashboardPage() {
         </div>
       </Panel>
 
-      <Panel title="로케이션 업무 현황" className="location-panel">
+      <Panel title="업무 진행도" className="location-panel">
         <div className="table-wrap">
           <table className="erp-location-table">
             <thead>
               <tr>
                 <th>구역</th>
                 <th>업무</th>
-                <th>구역 위치</th>
-                <th>최종 위치</th>
-                <th>예상 잔여</th>
-                <th>표본</th>
-                <th>최종 수행자</th>
-                <th>최종 수행시각</th>
+                <th>진행위치</th>
+                <th>위치 기준 진행도</th>
+                <th>최근 수행자</th>
+                <th>보고시각</th>
               </tr>
             </thead>
             <tbody>
               {data.areaWorkStatuses.length === 0 && (
-                <tr><td colSpan={8} className="empty-cell">로케이션 또는 업무 종류를 먼저 등록해주세요.</td></tr>
+                <tr><td colSpan={6} className="empty-cell">로케이션 또는 업무 종류를 먼저 등록해주세요.</td></tr>
               )}
               {data.areaWorkStatuses.slice(0, 24).map((row) => (
                 <tr key={`${row.areaId}-${row.workTypeId}`}>
                   <td><strong>{row.areaCode}</strong></td>
                   <td>{row.workType}</td>
+                  <td>{row.lastCompletedLocation ?? '미실시'}</td>
                   <td>
                     <div className="erp-progress-cell">
                       <div className="progress-track"><span style={{ width: `${row.progressPercent}%` }} /></div>
                       <b>{row.progressPercent}%</b>
                     </div>
                   </td>
-                  <td>{row.lastCompletedLocation ?? '미실시'}</td>
-                  <td>
-                    <strong className="erp-eta-value">
-                      {eta(row.estimatedRemainingSeconds)}
-                    </strong>
-                  </td>
-                  <td>{row.estimateSampleCount > 0 ? `${row.estimateSampleCount}건` : '-'}</td>
                   <td>{row.lastMateNickname ?? '-'}</td>
                   <td>{row.lastPerformedAt ? time(row.lastPerformedAt) : '-'}</td>
                 </tr>
@@ -226,24 +228,20 @@ export function DashboardPage() {
       </Panel>
 
       <Panel
-        title="사용 로그"
+        title="최근 작업 로그"
         className="log-panel"
         action={visibleLogs.length > 0 ? (
           <button
             className="secondary-button compact"
-            onClick={() =>
-              setHiddenLogIds(
-                visibleLogs.map((log) => log.id)
-              )
-            }
+            onClick={() => setHiddenLogIds(visibleLogs.map((log) => log.id))}
           >
-            현재 표시 숨기기
+            현재 표시 지우기
           </button>
         ) : undefined}
       >
         <div className="log-list">
           {visibleLogs.length === 0 && <div className="empty">표시할 로그가 없습니다.</div>}
-          {visibleLogs.map((log) => (
+          {visibleLogs.slice(0, 10).map((log) => (
             <div className="log-row" key={log.id}>
               <time>{time(log.createdAt)}</time>
               <span className="log-type">[{log.type}]</span>

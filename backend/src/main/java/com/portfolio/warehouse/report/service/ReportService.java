@@ -726,61 +726,65 @@ public class ReportService {
         List<DailyTrendRow> result =
             new ArrayList<>();
 
-        for (
-            LocalDate date = fromDate;
-            !date.isAfter(toDate);
-            date = date.plusDays(1)
-        ) {
-            LocalDateTime dayStart =
-                date.atStartOfDay();
-            LocalDateTime dayEnd =
-                date.plusDays(1).atStartOfDay();
+      for (
+          LocalDate date = fromDate;
+          !date.isAfter(toDate);
+          date = date.plusDays(1)
+      ) {
+        final LocalDate currentDate = date;
 
-            long normal = sessions.stream()
-                .filter(session ->
-                    session.getQualityStatus()
-                        == WorkSessionQualityStatus.NORMAL
-                )
-                .mapToLong(session ->
-                    clippedSeconds(
-                        session,
-                        dayStart,
-                        dayEnd
-                    )
-                )
-                .sum();
+        LocalDateTime dayStart =
+            currentDate.atStartOfDay();
 
-            long uncertain = sessions.stream()
-                .filter(session ->
-                    session.getQualityStatus()
-                        == WorkSessionQualityStatus.UNCERTAIN
-                )
-                .mapToLong(session ->
-                    clippedSeconds(
-                        session,
-                        dayStart,
-                        dayEnd
-                    )
-                )
-                .sum();
+        LocalDateTime dayEnd =
+            currentDate.plusDays(1)
+                .atStartOfDay();
 
-            long issueCount = issues.stream()
-                .filter(issue ->
-                    issue.getCreatedAt()
-                        .toLocalDate()
-                        .equals(date)
+        long normal = sessions.stream()
+            .filter(session ->
+                session.getQualityStatus()
+                    == WorkSessionQualityStatus.NORMAL
+            )
+            .mapToLong(session ->
+                clippedSeconds(
+                    session,
+                    dayStart,
+                    dayEnd
                 )
-                .count();
+            )
+            .sum();
 
-            result.add(
-                new DailyTrendRow(
-                    date,
-                    normal,
-                    uncertain,
-                    issueCount
+        long uncertain = sessions.stream()
+            .filter(session ->
+                session.getQualityStatus()
+                    == WorkSessionQualityStatus.UNCERTAIN
+            )
+            .mapToLong(session ->
+                clippedSeconds(
+                    session,
+                    dayStart,
+                    dayEnd
                 )
-            );
-        }
+            )
+            .sum();
+
+        long issueCount = issues.stream()
+            .filter(issue ->
+                issue.getCreatedAt()
+                    .toLocalDate()
+                    .equals(currentDate)
+            )
+            .count();
+
+        result.add(
+            new DailyTrendRow(
+                currentDate,
+                normal,
+                uncertain,
+                issueCount
+            )
+        );
+      }
 
         return result;
     }

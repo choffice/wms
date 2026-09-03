@@ -26,7 +26,7 @@ CREATE DATABASE warehouse;
 ```text
 DB_URL=jdbc:postgresql://localhost:5432/warehouse
 DB_USERNAME=postgres
-DB_PASSWORD=postgres
+DB_PASSWORD=1234
 ```
 
 IntelliJ에서 Project SDK를 Java 17로 지정한 뒤
