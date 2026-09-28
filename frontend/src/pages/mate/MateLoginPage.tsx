@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import { PackageCheck, RefreshCw, Smartphone } from 'lucide-react'
-import { api } from '../../api/client'
+import { api, ApiError } from '../../api/client'
 import type { PdaLoginOption } from '../../api/types'
 import { useAuth } from '../../auth/AuthContext'
 
@@ -48,9 +48,47 @@ export function MateLoginPage() {
     setError('')
 
     try {
-      await mateLogin(Number(deviceNumber), employeeNo, password)
+      await mateLogin(
+          Number(deviceNumber),
+          employeeNo,
+          password,
+          false
+      )
     } catch (e) {
-      setError(e instanceof Error ? e.message : '로그인에 실패했습니다.')
+      if (
+          e instanceof ApiError &&
+          e.code === 'PDA_TAKEOVER_CONFIRM_REQUIRED'
+      ) {
+        const ok = window.confirm(
+            `PDA ${deviceNumber}은 현재 다른 MATE가 사용 중입니다.\n` +
+            `기존 PDA 사용을 종료하고 이 계정으로 전환할까요?`
+        )
+
+        if (ok) {
+          try {
+            await mateLogin(
+                Number(deviceNumber),
+                employeeNo,
+                password,
+                true
+            )
+          } catch (secondError) {
+            setError(
+                secondError instanceof Error
+                    ? secondError.message
+                    : 'PDA를 전환하지 못했습니다.'
+            )
+          }
+        }
+
+        return
+      }
+
+      setError(
+          e instanceof Error
+              ? e.message
+              : '로그인에 실패했습니다.'
+      )
     } finally {
       setPending(false)
     }
@@ -81,9 +119,10 @@ export function MateLoginPage() {
             >
               {pdas.length === 0 && <option value="">사용 가능한 PDA 없음</option>}
               {pdas.map((pda) => (
-                <option key={pda.deviceNumber} value={pda.deviceNumber}>
-                  PDA {pda.deviceNumber}
-                </option>
+                  <option key={pda.deviceNumber} value={pda.deviceNumber}>
+                    PDA {pda.deviceNumber}
+                    {pda.status === 'IN_USE' ? ' · 사용 중' : ''}
+                  </option>
               ))}
             </select>
             <button

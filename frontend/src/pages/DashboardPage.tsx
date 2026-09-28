@@ -5,6 +5,7 @@ import { api } from '../api/client'
 import type { AdminDashboard } from '../api/types'
 import { Panel } from '../components/Panel'
 import { StatusBadge } from '../components/StatusBadge'
+import { QRCodeSVG } from 'qrcode.react'
 
 function compact(text: string, max = 74) {
   return text.length > max ? `${text.slice(0, max)}…` : text
@@ -25,6 +26,12 @@ export function DashboardPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
   const [hiddenLogIds, setHiddenLogIds] = useState<number[]>([])
+  const [qrOpen, setQrOpen] = useState(false)
+  const mateBaseUrl =
+      import.meta.env.VITE_MATE_BASE_URL ||
+      window.location.origin
+  const mateLoginUrl =
+      `${mateBaseUrl.replace(/\/$/, '')}/mate/login`
   const reloadTimer = useRef<number | null>(null)
 
   const load = async () => {
@@ -38,6 +45,30 @@ export function DashboardPage() {
       setLoading(false)
     }
   }
+
+  const releasePda = async (
+      mate: AdminDashboard['mates'][number]
+  ) => {
+    if (mate.pdaUsageId == null) return
+
+    const ok = window.confirm(
+        `${mate.nickname}의 PDA ${mate.pdaNumber} 사용을 강제로 회수할까요?`
+    )
+
+    if (!ok) return
+
+    try {
+      await api.forceReleasePda(mate.pdaUsageId)
+      await load()
+    } catch (e) {
+      setError(
+          e instanceof Error
+              ? e.message
+              : 'PDA를 회수하지 못했습니다.'
+      )
+    }
+  }
+
 
   useEffect(() => {
     void load()
@@ -92,6 +123,7 @@ export function DashboardPage() {
           <Link className="primary-button compact" to="/assignments">업무배정</Link>
           <Link className="secondary-button compact" to="/issues">특이사항 전체보기</Link>
           <Link className="secondary-button compact" to="/settings?tab=mate">근무스케줄</Link>
+          <button type="button" className="secondary-button compact" onClick={() => setQrOpen(true)}>QR · MATE 로그인</button>
         </div>
       </div>
 
@@ -178,7 +210,22 @@ export function DashboardPage() {
               {data.mates.map((mate) => (
                 <tr key={mate.mateId}>
                   <td><strong>{mate.nickname}</strong></td>
-                  <td>{mate.pdaNumber ?? '-'}</td>
+                  <td>
+                    {mate.pdaNumber != null ? (
+                        <div className="erp-cell-actions">
+                          <strong>PDA {mate.pdaNumber}</strong>
+
+                          {mate.pdaUsageId != null && (
+                              <button
+                                  className="danger-text-button"
+                                  onClick={() => void releasePda(mate)}
+                              >
+                                회수
+                              </button>
+                          )}
+                        </div>
+                    ) : '-'}
+                  </td>
                   <td><StatusBadge status={mate.status} /></td>
                   <td>{mate.workType ?? '-'}</td>
                   <td>{mate.area ?? '-'}</td>
@@ -251,6 +298,35 @@ export function DashboardPage() {
           ))}
         </div>
       </Panel>
+      {qrOpen && (
+          <div
+              className="qr-backdrop"
+              onClick={() => setQrOpen(false)}
+          >
+            <div
+                className="qr-modal"
+                onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                  type="button"
+                  className="qr-close"
+                  onClick={() => setQrOpen(false)}
+              >
+                ×
+              </button>
+
+              <h3>MATE 모바일 로그인</h3>
+              <p>근무자가 휴대폰으로 스캔해주세요.</p>
+
+              <QRCodeSVG
+                  value={mateLoginUrl}
+                  size={210}
+              />
+
+              <small>{mateLoginUrl}</small>
+            </div>
+          </div>
+      )}
     </div>
   )
 }

@@ -61,6 +61,7 @@ export interface MateDashboardRow {
   status: 'AVAILABLE' | 'WORKING' | 'BREAK' | 'AWAY' | 'OFF_DUTY'
   whereabouts: string | null
   pdaNumber: number | null
+  pdaUsageId: number | null
   assignmentId: number | null
   workType: string | null
   area: string | null

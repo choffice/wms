@@ -13,7 +13,12 @@ interface AuthContextValue {
   user: AuthMe | null
   loading: boolean
   login: (employeeNo: string, password: string) => Promise<void>
-  mateLogin: (deviceNumber: number, employeeNo: string, password: string) => Promise<void>
+  mateLogin: (
+      deviceNumber: number,
+      employeeNo: string,
+      password: string,
+      forceTakeover?: boolean
+  ) => Promise<void>
   logout: () => Promise<void>
   refresh: () => Promise<void>
 }
@@ -43,8 +48,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(me)
   }
 
-  const mateLogin = async (deviceNumber: number, employeeNo: string, password: string) => {
-    const me = await api.mateLogin(deviceNumber, employeeNo, password)
+  const mateLogin = async (
+      deviceNumber: number,
+      employeeNo: string,
+      password: string,
+      forceTakeover = false
+  ) => {
+    const me = await api.mateLogin(
+        deviceNumber,
+        employeeNo,
+        password,
+        forceTakeover
+    )
     setUser(me)
   }
 

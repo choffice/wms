@@ -150,8 +150,21 @@ export const api = {
   adminLogin: (employeeNo: string, password: string) =>
     request<AuthMe>('/api/auth/admin/login', { method: 'POST', body: JSON.stringify({ employeeNo, password }) }),
   matePdaOptions: () => request<PdaLoginOption[]>('/api/auth/mate/pdas'),
-  mateLogin: (deviceNumber: number, employeeNo: string, password: string) =>
-    request<AuthMe>('/api/auth/mate/login', { method: 'POST', body: JSON.stringify({ deviceNumber, employeeNo, password }) }),
+  mateLogin: (
+      deviceNumber: number,
+      employeeNo: string,
+      password: string,
+      forceTakeover = false
+  ) =>
+      request<AuthMe>('/api/auth/mate/login', {
+        method: 'POST',
+        body: JSON.stringify({
+          deviceNumber,
+          employeeNo,
+          password,
+          forceTakeover
+        })
+      }),
   me: () => request<AuthMe | null>('/api/auth/me'),
   logout: () => request<void>('/api/auth/logout', { method: 'POST' }),
 

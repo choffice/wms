@@ -39,36 +39,98 @@ public class PdaSessionService {
     }
 
     @Transactional
-    public PdaUsageResponse allocate(Integer deviceNumber, String employeeNo) {
+    public PdaUsageResponse allocate(
+        Integer deviceNumber,
+        String employeeNo,
+        boolean forceTakeover
+    ) {
         PdaDevice device = deviceRepository.findByDeviceNumberForUpdate(deviceNumber)
-            .orElseThrow(() -> new NotFoundException("PDA_NOT_FOUND", "등록된 PDA 번호가 아닙니다."));
+            .orElseThrow(() -> new NotFoundException(
+                "PDA_NOT_FOUND",
+                "등록된 PDA 번호가 아닙니다."
+            ));
 
         Mate mate = mateRepository.findByEmployeeNoForUpdate(employeeNo)
-            .orElseThrow(() -> new NotFoundException("MATE_NOT_FOUND", "MATE를 찾을 수 없습니다."));
+            .orElseThrow(() -> new NotFoundException(
+                "MATE_NOT_FOUND",
+                "MATE를 찾을 수 없습니다."
+            ));
 
         if (!mate.isActive() || !mate.getAccount().isEnabled()) {
-            throw new BusinessException("MATE_INACTIVE", "비활성 상태의 MATE입니다.");
+            throw new BusinessException(
+                "MATE_INACTIVE",
+                "비활성 상태의 MATE입니다."
+            );
         }
 
         if (!device.isActive()
             || device.getStatus() == PdaStatus.LOST
             || device.getStatus() == PdaStatus.INSPECTION
             || device.getStatus() == PdaStatus.RETIRED) {
-            throw new BusinessException("PDA_UNAVAILABLE", "현재 사용할 수 없는 PDA입니다.");
-        }
-
-        if (usageRepository.findFirstByPdaDeviceIdAndReleasedAtIsNull(device.getId()).isPresent()) {
-            throw new BusinessException("PDA_ALREADY_ASSIGNED", "이미 다른 MATE가 사용 중인 PDA입니다.");
-        }
-
-        if (usageRepository.findFirstByMateIdAndReleasedAtIsNull(mate.getId()).isPresent()) {
             throw new BusinessException(
-                "MATE_ALREADY_HAS_PDA",
-                "현재 PDA를 반납한 뒤 다른 PDA를 선택해주세요."
+                "PDA_UNAVAILABLE",
+                "현재 사용할 수 없는 PDA입니다."
             );
         }
 
-        PdaUsageHistory usage = usageRepository.save(new PdaUsageHistory(device, mate));
+        var activeOnDevice =
+            usageRepository.findFirstByPdaDeviceIdAndReleasedAtIsNull(
+                device.getId()
+            );
+
+        if (activeOnDevice.isPresent()) {
+            PdaUsageHistory currentUsage = activeOnDevice.get();
+
+            // 같은 MATE가 같은 PDA로 재접속
+            if (currentUsage.getMate().getId().equals(mate.getId())) {
+                if (device.getStatus() != PdaStatus.IN_USE) {
+                    device.changeStatus(PdaStatus.IN_USE);
+                }
+
+                return PdaUsageResponse.from(currentUsage);
+            }
+
+            // 다른 MATE가 사용 중
+            if (!forceTakeover) {
+                throw new BusinessException(
+                    "PDA_TAKEOVER_CONFIRM_REQUIRED",
+                    "현재 다른 MATE가 사용 중인 PDA입니다."
+                );
+            }
+
+            // 사용자가 전환을 확인한 경우 기존 PDA 사용 이력 종료
+            currentUsage.release(PdaReleaseReason.DEVICE_CHANGE);
+
+            eventService.publish(
+                ActivityType.PDA_RETURN,
+                currentUsage.getMate().getAccount(),
+                "관리자",
+                "PDA " + device.getDeviceNumber() + " 사용 전환",
+                "PDA_USAGE",
+                currentUsage.getId(),
+                true,
+                true
+            );
+
+            device.changeStatus(PdaStatus.AVAILABLE);
+        }
+
+        // 로그인하려는 MATE가 이미 다른 PDA를 사용 중인지 확인
+        var activeForMate =
+            usageRepository.findFirstByMateIdAndReleasedAtIsNull(
+                mate.getId()
+            );
+
+        if (activeForMate.isPresent()) {
+            throw new BusinessException(
+                "MATE_ALREADY_HAS_PDA",
+                "현재 다른 PDA를 사용 중입니다. 기존 PDA를 먼저 반납해주세요."
+            );
+        }
+
+        PdaUsageHistory usage =
+            usageRepository.save(new PdaUsageHistory(device, mate));
+
         device.changeStatus(PdaStatus.IN_USE);
 
         if (mate.getCurrentStatus() == MateStatus.OFF_DUTY) {

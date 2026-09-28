@@ -88,20 +88,38 @@ public class AdminDashboardService {
     }
 
     private MateDashboardRow mateRow(Mate mate) {
-        Integer pdaNumber = pdaUsageRepository.findFirstByMateIdAndReleasedAtIsNull(mate.getId())
+        var pdaUsage =
+            pdaUsageRepository.findFirstByMateIdAndReleasedAtIsNull(
+                mate.getId()
+            );
+
+        Long pdaUsageId = pdaUsage
+            .map(usage -> usage.getId())
+            .orElse(null);
+
+        Integer pdaNumber = pdaUsage
             .map(usage -> usage.getPdaDevice().getDeviceNumber())
             .orElse(null);
 
         Optional<WorkSession> openSession =
-            sessionRepository.findFirstByMateIdAndEndedAtIsNull(mate.getId());
+            sessionRepository.findFirstByMateIdAndEndedAtIsNull(
+                mate.getId()
+            );
 
         WorkAssignment assignment = openSession
             .map(WorkSession::getWorkAssignment)
             .orElseGet(() ->
-                assignmentRepository.findAllByCurrentMateIdAndStatusInOrderByAssignedAtDesc(
-                    mate.getId(),
-                    List.of(WorkAssignmentStatus.ASSIGNED, WorkAssignmentStatus.IN_PROGRESS)
-                ).stream().findFirst().orElse(null)
+                assignmentRepository
+                    .findAllByCurrentMateIdAndStatusInOrderByAssignedAtDesc(
+                        mate.getId(),
+                        List.of(
+                            WorkAssignmentStatus.ASSIGNED,
+                            WorkAssignmentStatus.IN_PROGRESS
+                        )
+                    )
+                    .stream()
+                    .findFirst()
+                    .orElse(null)
             );
 
         return new MateDashboardRow(
@@ -110,12 +128,20 @@ public class AdminDashboardService {
             mate.getCurrentStatus().name(),
             mate.getCurrentWhereabouts(),
             pdaNumber,
+            pdaUsageId,
             assignment == null ? null : assignment.getId(),
-            assignment == null ? null : assignment.getWorkType().getName(),
-            assignment == null ? null : assignment.getAreaLocation().getFullCode(),
-            assignment == null || assignment.getCurrentLastCompletedLocation() == null
+            assignment == null
                 ? null
-                : assignment.getCurrentLastCompletedLocation().getFullCode()
+                : assignment.getWorkType().getName(),
+            assignment == null
+                ? null
+                : assignment.getAreaLocation().getFullCode(),
+            assignment == null
+                || assignment.getCurrentLastCompletedLocation() == null
+                ? null
+                : assignment
+                  .getCurrentLastCompletedLocation()
+                  .getFullCode()
         );
     }
 

@@ -102,7 +102,10 @@ public class AuthController {
     public List<PdaLoginOptionResponse> matePdaOptions() {
         return pdaDeviceRepository.findAll().stream()
             .filter(device -> device.isActive())
-            .filter(device -> device.getStatus() == PdaStatus.AVAILABLE)
+            .filter(device ->
+                device.getStatus() == PdaStatus.AVAILABLE
+                    || device.getStatus() == PdaStatus.IN_USE
+            )
             .sorted(
                 java.util.Comparator.comparing(
                     (com.portfolio.warehouse.pda.domain.PdaDevice device) ->
@@ -131,7 +134,8 @@ public class AuthController {
 
         PdaUsageResponse usage = pdaSessionService.allocate(
             request.deviceNumber(),
-            request.employeeNo()
+            request.employeeNo(),
+            request.forceTakeover()
         );
 
         saveAuthentication(authentication, servletRequest, servletResponse);

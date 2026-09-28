@@ -345,9 +345,26 @@ function LocationTab({ items, reload, notify }: {
             <label>시작점<input type="number" value={start} onChange={(e) => setStart(e.target.value)} required/></label>
             <label>종료점<input type="number" value={end} onChange={(e) => setEnd(e.target.value)} required/></label>
           </div>
-          <div className="erp-form-row">
-            <label><input type="radio" checked={foodType === 'NON_FOOD'} onChange={() => setFoodType('NON_FOOD')}/> 비식품</label>
-            <label><input type="radio" checked={foodType === 'FOOD'} onChange={() => setFoodType('FOOD')}/> 식품</label>
+          <div className="food-type-toggle">
+            <label className={foodType === 'NON_FOOD' ? 'active' : ''}>
+              <input
+                  type="radio"
+                  name="foodType"
+                  checked={foodType === 'NON_FOOD'}
+                  onChange={() => setFoodType('NON_FOOD')}
+              />
+              비식품
+            </label>
+
+            <label className={foodType === 'FOOD' ? 'active' : ''}>
+              <input
+                  type="radio"
+                  name="foodType"
+                  checked={foodType === 'FOOD'}
+                  onChange={() => setFoodType('FOOD')}
+              />
+              식품
+            </label>
           </div>
           {foodType === 'NON_FOOD' && <CategoryChecks values={categories} onToggle={(value) => toggle(value)}/>} 
           <button className="primary-button">등록</button>

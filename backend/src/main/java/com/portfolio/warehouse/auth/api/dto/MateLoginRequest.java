@@ -7,5 +7,6 @@ import jakarta.validation.constraints.NotNull;
 public record MateLoginRequest(
     @NotNull @Min(1) Integer deviceNumber,
     @NotBlank String employeeNo,
-    @NotBlank String password
+    @NotBlank String password,
+    boolean forceTakeover
 ) {}

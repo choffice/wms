@@ -4614,3 +4614,126 @@ textarea {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+.mate-qr-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(15, 23, 42, 0.55);
+}
+
+.mate-qr-modal {
+  position: relative;
+  width: min(420px, 100%);
+  padding: 30px;
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  box-shadow: 0 18px 50px rgba(15, 23, 42, 0.2);
+  text-align: center;
+}
+
+.mate-qr-modal h2 {
+  margin: 8px 0 10px;
+}
+
+.mate-qr-modal p {
+  margin: 0 0 22px;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+.mate-qr-code {
+  display: flex;
+  justify-content: center;
+  padding: 14px;
+  margin-bottom: 14px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+}
+
+.mate-qr-url {
+  padding: 10px;
+  margin-bottom: 18px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-size: 12px;
+  word-break: break-all;
+}
+
+.mate-qr-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  cursor: pointer;
+}
+
+.food-type-toggle {
+  display: inline-flex;
+  align-self: flex-start;
+  border: 1px solid #c8cdd1;
+  background: #fff;
+}
+
+.food-type-toggle label {
+  min-width: 96px;
+  padding: 9px 18px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b737a;
+  border-right: 1px solid #c8cdd1;
+  transition: background .15s, color .15s;
+}
+
+.food-type-toggle label:last-child {
+  border-right: 0;
+}
+
+.food-type-toggle input {
+  display: none;
+}
+
+.food-type-toggle label:hover {
+  background: #f0f2f3;
+}
+
+.food-type-toggle label.active {
+  background: #20242a;
+  color: #fff;
+}
+
+.mate-mobile-form,
+.mate-mobile-form label,
+.mate-quantity-block,
+.mate-form-grid-3,
+.mate-form-grid-3 label {
+  min-width: 0;
+}
+
+.mate-mobile-form input,
+.mate-mobile-form select,
+.mate-mobile-form textarea {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.mate-form-grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}

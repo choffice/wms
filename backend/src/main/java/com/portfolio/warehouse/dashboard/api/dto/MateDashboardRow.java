@@ -6,6 +6,7 @@ public record MateDashboardRow(
     String status,
     String whereabouts,
     Integer pdaNumber,
+    Long pdaUsageId,
     Long assignmentId,
     String workType,
     String area,
